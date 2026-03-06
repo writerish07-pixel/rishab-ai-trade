@@ -28,7 +28,10 @@ class MarketDataService:
         cache_key = f"mkt_quote:{exchange}:{symbol}"
         cached = await cache_get(cache_key)
         if cached:
-            return QuoteData(**cached)
+            try:
+                return QuoteData(**cached)
+            except Exception:
+                pass  # Cache data malformed — fall through to live fetch
 
         # Try sources in order
         sources = self._get_source_order(exchange)
@@ -52,7 +55,10 @@ class MarketDataService:
         cache_key = f"candles:{exchange}:{symbol}:{interval}:{days}"
         cached = await cache_get(cache_key)
         if cached:
-            return [OHLCData(**c) for c in cached]
+            try:
+                return [OHLCData(**c) for c in cached]
+            except Exception:
+                pass  # Cache data malformed — fall through to live fetch
 
         candles = []
         sources = self._get_source_order(exchange)

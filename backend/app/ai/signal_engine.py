@@ -137,7 +137,7 @@ class SignalEngine:
             "pattern_detected": patterns.get("primary_pattern"),
             "trend": trend,
             "reasons": reasons,
-            "institutional_signal": inst_activity.signal if inst_activity else "NEUTRAL",
+            "institutional_signal": getattr(inst_activity, 'signal', 'NEUTRAL') if inst_activity else "NEUTRAL",
             "generated_at": datetime.utcnow().isoformat(),
         }
 

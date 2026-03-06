@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     APP_NAME: str = "AI Trading App"
     DEBUG: bool = False
     API_VERSION: str = "v1"
-    SECRET_KEY: str = "change-this-in-production-use-strong-random-key"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+    SECRET_KEY: str = "35d2b8a3056fb746d05198f69c0b485f93cd49d8c76c7f5648eda25ea4d56dc0"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60  # 1 hour
 
     # Database
     DATABASE_URL: str = "postgresql+asyncpg://trader:trader123@localhost:5432/trading_db"
