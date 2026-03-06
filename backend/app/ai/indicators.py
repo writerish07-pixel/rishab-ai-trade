@@ -92,7 +92,7 @@ def calculate_all_indicators(df: pd.DataFrame) -> pd.DataFrame:
 
         # Volume indicators
         df["Volume_SMA_20"] = ta.sma(df["Volume"], length=20)
-        df["Volume_Ratio"] = df["Volume"] / df["Volume_SMA_20"].replace(0, np.nan)
+        df["Volume_Ratio"] = (df["Volume"] / df["Volume_SMA_20"].replace(0, np.nan)).fillna(1.0)
         df["OBV"] = ta.obv(df["Close"], df["Volume"])
 
         # Momentum

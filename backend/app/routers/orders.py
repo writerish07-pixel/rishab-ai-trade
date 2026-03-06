@@ -132,8 +132,9 @@ async def cancel_order(
     """Cancel an open order."""
     angel = _get_angel_service(current_user)
     result = await angel.cancel_order(payload.order_id, payload.variety)
-    if not result:
-        raise HTTPException(status_code=400, detail="Order cancellation failed")
+    if not result or not result.get("status"):
+        msg = result.get("message", "Order cancellation failed") if result else "Order cancellation failed"
+        raise HTTPException(status_code=400, detail=msg)
 
     # Update trade status in DB
     res = await db.execute(
