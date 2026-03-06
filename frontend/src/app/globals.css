@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2235;
+  --bull: #22c55e;
+  --bear: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: #f1f5f9;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0e1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* Price flash animations */
+.flash-green {
+  animation: flashGreen 0.5s ease-in-out;
+}
+.flash-red {
+  animation: flashRed 0.5s ease-in-out;
+}
+
+@keyframes flashGreen {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(34, 197, 94, 0.15); }
+}
+
+@keyframes flashRed {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(239, 68, 68, 0.15); }
+}
+
+/* Trading terminal font for numbers */
+.font-trading {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Card base */
+.card {
+  @apply bg-bg-card border border-border rounded-xl p-4;
+}
+
+/* Bull/Bear color utilities */
+.text-bull { color: #22c55e; }
+.text-bear { color: #ef4444; }
+.bg-bull { background-color: rgba(34, 197, 94, 0.1); }
+.bg-bear { background-color: rgba(239, 68, 68, 0.1); }
+
+/* Button base */
+.btn {
+  @apply px-4 py-2 rounded-lg font-semibold transition-all duration-150 cursor-pointer;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-primary;
+}
+.btn-buy {
+  @apply btn bg-bull text-white hover:bg-green-400 focus:ring-bull;
+}
+.btn-sell {
+  @apply btn bg-bear text-white hover:bg-red-400 focus:ring-bear;
+}
+.btn-primary {
+  @apply btn bg-accent-blue text-white hover:bg-blue-500 focus:ring-accent-blue;
+}
+.btn-ghost {
+  @apply btn border border-border text-text-secondary hover:text-text-primary hover:border-accent-blue;
+}
+
+/* Input base */
+.input {
+  @apply w-full bg-bg-secondary border border-border rounded-lg px-3 py-2;
+  @apply text-text-primary placeholder-text-muted;
+  @apply focus:outline-none focus:border-accent-blue focus:ring-1 focus:ring-accent-blue;
+}
+
+/* Badge */
+.badge {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+}
+.badge-bull { @apply badge bg-green-900/40 text-bull; }
+.badge-bear { @apply badge bg-red-900/40 text-bear; }
+.badge-neutral { @apply badge bg-yellow-900/40 text-yellow-400; }
+.badge-blue { @apply badge bg-blue-900/40 text-blue-400; }
