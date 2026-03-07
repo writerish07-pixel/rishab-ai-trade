@@ -11,7 +11,7 @@ from app.core.security import (
 )
 from app.models.user import User
 from app.models.portfolio import Portfolio
-from app.schemas.user import UserCreate, UserResponse, UserUpdate, Token
+from app.schemas.user import UserCreate, UserResponse, UserUpdate, Token, AngelOneConnect
 from app.core.config import settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -84,31 +84,30 @@ async def update_profile(
 
 @router.post("/angel-one/connect")
 async def connect_angel_one(
-    api_key: str,
-    client_id: str,
-    password: str,
-    totp_secret: str,
+    payload: AngelOneConnect,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Connect and authenticate with Angel One SmartAPI."""
-    from app.services.angel_one import get_angel_one_service
+    from app.services.angel_one import AngelOneService, _angel_one_instances
 
-    service = get_angel_one_service(current_user.id, api_key, client_id, password, totp_secret)
+    # Always create a fresh instance so new credentials are always used
+    service = AngelOneService(payload.api_key, payload.client_id, payload.password, payload.totp_secret)
+    _angel_one_instances[current_user.id] = service
     success = await service.login()
 
     if not success:
         raise HTTPException(status_code=400, detail="Angel One authentication failed. Check credentials.")
 
     # Save credentials
-    current_user.angel_one_api_key = api_key
-    current_user.angel_one_client_id = client_id
-    current_user.angel_one_password = password
-    current_user.angel_one_totp_secret = totp_secret
+    current_user.angel_one_api_key = payload.api_key
+    current_user.angel_one_client_id = payload.client_id
+    current_user.angel_one_password = payload.password
+    current_user.angel_one_totp_secret = payload.totp_secret
     db.add(current_user)
     await db.commit()
 
-    return {"status": "connected", "client_id": client_id, "message": "Angel One connected successfully"}
+    return {"status": "connected", "client_id": payload.client_id, "message": "Angel One connected successfully"}
 
 
 @router.get("/angel-one/status")

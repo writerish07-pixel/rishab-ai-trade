@@ -30,6 +30,13 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+class AngelOneConnect(BaseModel):
+    api_key: str
+    client_id: str
+    password: str
+    totp_secret: str
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str

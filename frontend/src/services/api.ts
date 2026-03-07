@@ -72,7 +72,7 @@ export const authAPI = {
   connectAngelOne: async (credentials: {
     api_key: string; client_id: string; password: string; totp_secret: string;
   }) => {
-    const { data } = await api.post('/auth/angel-one/connect', null, { params: credentials });
+    const { data } = await api.post('/auth/angel-one/connect', credentials);
     return data;
   },
 
