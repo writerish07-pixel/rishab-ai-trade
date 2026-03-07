@@ -94,10 +94,11 @@ async def connect_angel_one(
     # Always create a fresh instance so new credentials are always used
     service = AngelOneService(payload.api_key, payload.client_id, payload.password, payload.totp_secret)
     _angel_one_instances[current_user.id] = service
-    success = await service.login()
+    success, error_msg = await service.login()
 
     if not success:
-        raise HTTPException(status_code=400, detail="Angel One authentication failed. Check credentials.")
+        detail = f"Angel One: {error_msg}" if error_msg else "Angel One authentication failed. Check credentials."
+        raise HTTPException(status_code=400, detail=detail)
 
     # Save credentials
     current_user.angel_one_api_key = payload.api_key

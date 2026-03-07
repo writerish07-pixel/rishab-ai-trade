@@ -43,8 +43,8 @@ class AngelOneService:
         totp = pyotp.TOTP(self.totp_secret)
         return totp.now()
 
-    async def login(self) -> bool:
-        """Authenticate with Angel One SmartAPI."""
+    async def login(self) -> tuple[bool, str]:
+        """Authenticate with Angel One SmartAPI. Returns (success, error_message)."""
         try:
             loop = asyncio.get_event_loop()
             self._smart_api = SmartConnect(api_key=self.api_key)
@@ -67,19 +67,21 @@ class AngelOneService:
                 await cache_set("angel_one_refresh", self._refresh_token, ttl=86400)
 
                 logger.info(f"Angel One login successful for {self.client_id}")
-                return True
+                return True, ""
             else:
-                logger.error(f"Angel One login failed: {data.get('message')}")
-                return False
+                error_msg = data.get("message", "Authentication failed")
+                logger.error(f"Angel One login failed: {error_msg}")
+                return False, error_msg
 
         except Exception as e:
             logger.error(f"Angel One login error: {e}")
-            return False
+            return False, str(e)
 
     async def ensure_authenticated(self) -> bool:
         """Ensure we have valid credentials, refresh if needed."""
         if self._smart_api is None or self._token_expiry is None:
-            return await self.login()
+            success, _ = await self.login()
+            return success
         if datetime.utcnow() >= self._token_expiry - timedelta(minutes=10):
             return await self._refresh_session()
         return True
@@ -96,10 +98,12 @@ class AngelOneService:
                 self._token_expiry = datetime.utcnow() + timedelta(hours=8)
                 await cache_set("angel_one_jwt", self._jwt_token, ttl=28800)
                 return True
-            return await self.login()  # fallback to full login
+            success, _ = await self.login()  # fallback to full login
+            return success
         except Exception as e:
             logger.error(f"Token refresh failed: {e}")
-            return await self.login()
+            success, _ = await self.login()
+            return success
 
     async def get_quote(self, exchange: str, tokens: List[str]) -> Optional[dict]:
         """Get real-time quote for given token(s)."""
