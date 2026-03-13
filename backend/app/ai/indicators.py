@@ -17,7 +17,9 @@ def build_dataframe(candles: list) -> Optional[pd.DataFrame]:
         return None
     records = []
     for c in candles:
-        if hasattr(c, "dict"):
+        if hasattr(c, "model_dump"):
+            records.append(c.model_dump())
+        elif hasattr(c, "dict"):
             records.append(c.dict())
         else:
             records.append(c)

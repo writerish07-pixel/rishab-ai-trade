@@ -134,7 +134,7 @@ class InstitutionalTracker:
             dii_activity=dii_signal,
             signal=overall_signal,
         )
-        await cache_set(cache_key, activity.dict(), ttl=1800)
+        await cache_set(cache_key, activity.model_dump(), ttl=1800)
         return activity
 
     def _classify_institutional_intent(self, deals: List[dict], investor_type: str) -> str:

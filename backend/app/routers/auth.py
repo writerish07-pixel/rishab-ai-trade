@@ -74,7 +74,8 @@ async def update_profile(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    for field, value in payload.dict(exclude_unset=True).items():
+    update_data = payload.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
         setattr(current_user, field, value)
     db.add(current_user)
     await db.commit()
