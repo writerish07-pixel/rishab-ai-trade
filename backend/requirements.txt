@@ -26,11 +26,11 @@ websocket-client==1.8.0
 
 # Market data
 yfinance==0.2.43
-pandas==2.2.3
-numpy==1.26.4
+pandas>=2.2.3
+numpy>=1.26.4
 
 # Technical Analysis
-pandas-ta==0.3.14b0
+pandas-ta>=0.3.14b0,!=0.4.67b0
 scipy==1.14.1
 
 # Settings
