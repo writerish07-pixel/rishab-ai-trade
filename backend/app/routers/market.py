@@ -134,7 +134,7 @@ async def get_market_overview(current_user: User = Depends(get_current_user)):
         market_breadth="POSITIVE" if adr > 1.2 else "NEGATIVE" if adr < 0.8 else "NEUTRAL",
     )
 
-    await cache_set(cache_key, overview.dict(), ttl=60)
+    await cache_set(cache_key, overview.model_dump(), ttl=60)
     return overview
 
 

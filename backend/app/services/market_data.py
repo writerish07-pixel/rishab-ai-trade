@@ -39,7 +39,7 @@ class MarketDataService:
             try:
                 quote = await self._fetch_quote(source, symbol, exchange, angel_service)
                 if quote:
-                    await cache_set(cache_key, quote.dict(), ttl=2)
+                    await cache_set(cache_key, quote.model_dump(), ttl=2)
                     return quote
             except Exception as e:
                 logger.warning(f"Source {source} failed for {symbol}: {e}")
@@ -67,7 +67,7 @@ class MarketDataService:
                 candles = await self._fetch_candles(source, symbol, exchange, interval, days, angel_service, token)
                 if candles:
                     ttl = 60 if interval == "1d" else 30
-                    await cache_set(cache_key, [c.dict() for c in candles], ttl=ttl)
+                    await cache_set(cache_key, [c.model_dump() for c in candles], ttl=ttl)
                     return candles
             except Exception as e:
                 logger.warning(f"Candles from {source} failed: {e}")

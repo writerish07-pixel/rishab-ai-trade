@@ -196,5 +196,5 @@ async def get_institutional_activity(
     results = []
     for sym in sym_list:
         activity = await signal_engine.institutional_tracker.analyze_symbol(sym)
-        results.append(activity.dict())
+        results.append(activity.model_dump())
     return {"data": results}

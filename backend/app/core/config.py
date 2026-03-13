@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import List, Optional
 
 
 class Settings(BaseSettings):
@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "AI Trading App"
     DEBUG: bool = False
     API_VERSION: str = "v1"
-    SECRET_KEY: str = "35d2b8a3056fb746d05198f69c0b485f93cd49d8c76c7f5648eda25ea4d56dc0"
+    SECRET_KEY: str = "change-me-in-production-generate-with-openssl-rand-hex-32"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60  # 1 hour
 
     # Database
@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     MAX_SIGNALS_PER_DAY: int = 20
 
     # CORS
-    ALLOWED_ORIGINS: list = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
     # Market hours (IST) — NSE/BSE
     MARKET_OPEN_TIME: str = "09:15"

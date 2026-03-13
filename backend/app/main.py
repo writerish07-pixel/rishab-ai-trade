@@ -31,9 +31,12 @@ async def lifespan(app: FastAPI):
     await init_db()
     logger.info("Database initialized")
 
-    # Initialize Redis
-    await get_redis()
-    logger.info("Redis connected")
+    # Initialize Redis (non-blocking — app works without cache)
+    redis = await get_redis()
+    if redis:
+        logger.info("Redis connected")
+    else:
+        logger.warning("Redis unavailable — running without cache")
 
     yield  # App is running
 
